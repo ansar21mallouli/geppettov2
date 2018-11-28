@@ -7,7 +7,7 @@ Clone this repo and run them directy with a simple `node` command.
 
 ```bash
 git clone https://github.com/mbadrani/geppettov2.git
-cd geppetto
+cd geppettov2
 npm i
 ```
 #### First example launch Installation test
