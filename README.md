@@ -50,3 +50,6 @@ If you want to run not mocha test only on specific parts (for example PR 8237), 
 ```
 node test/not_mocha/PR/8237.js --URL 'http://127.0.0.1:8081/prestashop' --ADMIN_FOLDER_NAME adminFolderName
 ```
+
+#### The architecture of the project
+![Architecture](./media/tree_archi.png)
