@@ -17,7 +17,7 @@ global.dbServer = argv.DB_SERVER || '10.1.37.2';
 global.dbUser = argv.DB_USER || 'root';
 global.dbPassword = argv.DB_PASSWD || 'sifast2016';
 
-global.downloadFileFolder = './test/mocha/downloads/';
+global.downloadFileFolder = './test/campaigns/files/generated_files/downloads/';
 global.customerEmail = 'pub@prestashop.com';
 global.customerPassword = '123456789';
 global.dataFileFolder = './test/mocha/datas/';
