@@ -4,7 +4,8 @@
   "description": "GeppettoV2 is our new version of test Automation Framework for Prestashop",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "mocha-test-puppeteer": "node_modules/mocha/bin/mocha test/campaigns/clients/take_screenshot.js",
+    "specific-test": "node_modules/mocha/bin/mocha test/campaigns/suite/$TEST_PATH"
   },
   "repository": {
     "type": "git",
