@@ -1,144 +1,105 @@
 const {InstallPage} = require('../../../../uimap/installation/install');
+let promise = Promise.resolve();
 
 module.exports = {
-  installShop(language = '', selectedValue, close = false) {
-    // do some setup
-    scenario('Install new shop', client => {
-      const lang = language === '' ? global.language : language;
-      if (selectedValue.includes(lang)) {
-        // Select language
-        scenario('Step 1 : Choose your language', client => {
-          const lang = language === '' ? global.language : language;
-          test('should choose the language "' + lang.toUpperCase() + '" from the list', async () => await client.waitForAndSelect(InstallPage.StepOne.installation_language_installation_select, lang, 2000));
-          test('should click on "Next" button', () => client.waitForAndClick(InstallPage.Common.installation_next_button));
-        }, 'common_client');
-        // Accept the terms and conditions
-        scenario('Step 2 : License agreements', client => {
-          test('should accept the terms and conditions', () => client.waitForAndClick(InstallPage.StepTwo.installation_agree_terms_and_conditions_checkbox));
-          test('should click on "Next" button', () => client.waitForAndClick(InstallPage.Common.installation_next_button));
-        }, 'common_client');
-        // Checking prestashop compatibility
-        scenario('Step 3 : System compatibility', client => {
-          test('should check that the "System compatibility" is in green', () => client.checkAttributeValue(InstallPage.StepThree.installation_compatibility_green_box, 'class', 'okBlock', 'equal', 7000));
-          test('should click on "Next" button', () => client.waitForAndClick(InstallPage.Common.installation_next_button));
-        }, 'common_client');
-        //  Fill the store information form
-        scenario('Step 4 : Store information', client => {
-          test('should set the "Name" input of shop', () => client.waitForAndType(InstallPage.StepFour.installation_shop_name_input_field, 'puppeteerDemo', 2000));
-          test('should choose the "Country" from the dropdown list', async () => {
-            await client.waitForAndClick(InstallPage.StepFour.installation_country_list_select);
-            await client.waitForAndType(InstallPage.StepFour.installation_country_search_input_field, global.country);
-            await client.waitForAndClick(InstallPage.StepFour.installation_country_list_select);
-          });
-          test('should set the "Firstname" input', () => client.waitForAndType(InstallPage.StepFour.installation_account_first_name_input_field, global.firstName, 2000));
-          test('should set the "Lastname" input', () => client.waitForAndType(InstallPage.StepFour.installation_account_last_name_input_field, global.lastName, 2000));
-          test('should set the "Email" input', () => client.waitForAndType(InstallPage.StepFour.installation_account_email_input_field, global.email, 2000));
-          test('should set the "Password" input', () => client.waitForAndType(InstallPage.StepFour.installation_account_password_input_field, global.password, 2000));
-          test('should set the "Confirm password" input', () => client.waitForAndType(InstallPage.StepFour.installation_re_type_password_input_field, global.password, 2000));
-          test('should click on "Next" button', () => client.waitForAndClick(InstallPage.Common.installation_next_button));
-        }, 'common_client');
-        // Fill the database configuration form
-        scenario('Step 5 : System configuration', client => {
-          test('should set the "Database server" input', () => client.waitForAndSetValue(InstallPage.StepFive.installation_database_server_address_input_field, global.dbServer, 3000));
-          test('should set the "Database name" input', () => client.waitForAndSetValue(InstallPage.StepFive.installation_database_name_input_field, 'database' + global.dateTime, 1000));
-          test('should set the "Database user" input', () => client.waitForAndSetValue(InstallPage.StepFive.installation_database_login_input_field, global.dbUser, 1000));
-          test('should set the "Database password" input', () => client.waitForAndSetValue(InstallPage.StepFive.installation_database_password_input_field, global.dbPassword, 1000));
-          test('should click on "Test your database connection now!" button', () => client.waitForAndClick(InstallPage.StepFive.installation_test_database_connection_button));
-          test('should click on "Create database" button', () => client.waitForAndClick(InstallPage.StepFive.installation_database_connection_box, 3000));
-          test('should check that the "Database" is well created', () => client.checkAttributeValue(InstallPage.StepFive.database_created_box, 'class', 'okBlock', 'equal', 4000));
-          test('should click on "Next" button', () => client.waitForAndClick(InstallPage.Common.installation_next_button, 2000));
-        }, 'common_client');
-        //  The installation is started
-        scenario('Step 6 : Store installation', client => {
-          test('should check that the "Create file parameters" is in green', () => client.waitFor(InstallPage.StepSix.installation_success_create_file_parameters_title, {timeout: 360000}));
-          test('should check that the "Create database tables" is in green', () => client.waitFor(InstallPage.StepSix.installation_success_create_database_tables_title, {timeout: 360000}));
-          test('should check that the "Create default shop and languages" is in green', () => client.waitFor(InstallPage.StepSix.installation_success_create_default_shop_language_title, {timeout: 360000}));
-          test('should check that the "Populate database tables" is in green', () => client.waitFor(InstallPage.StepSix.installation_success_populate_database_tables_title, {timeout: 360000}));
-          test('should check that the "Configure shop information" is in green', () => client.waitFor(InstallPage.StepSix.installation_success_configure_shop_information_title, {timeout: 360000}));
-          test('should check that the "Install demonstration data" is in green', () => client.waitFor(InstallPage.StepSix.installation_success_install_demonstration_data_title, {timeout: 360000}));
-          test('should check that the "Install modules" is in green', () => client.waitFor(InstallPage.StepSix.installation_success_install_modules_title, {timeout: 360000}));
-          test('should check that the "Install addons modules" is in green', () => client.waitFor(InstallPage.StepSix.installation_success_install_addons_modules_title, {timeout: 360000}));
-          test('should check that the "Install theme" is in green', () => client.waitFor(InstallPage.StepSix.installation_success_install_theme_title, {timeout: 360000}));
-          test('should check that the "Finish installation" is in green', () => client.waitFor(InstallPage.StepSix.installation_installation_finished_title, {timeout: 360000}));
-        }, 'common_client');
-      }
-      else {
-        test('should check the selected language', async () => {
-          await client.waitFor(4000);
-          await expect(selectedValue.includes(lang), 'Failed to select the "' + lang.toUpperCase() + '" language !').to.be.true;
-        });
-      }
-    }, 'common_client', close);
-  },
 
-  async installStepOne(language = '', selectedValue, client) {
-    const lang = language === await '' ? global.language : language;
-    global.continueInstallation = true;
-    if (selectedValue.includes(lang)) {
-      await client.waitForAndSelect(InstallPage.StepOne.installation_language_installation_select, lang, 2000);
-      await client.waitForAndClick(InstallPage.Common.installation_next_button);
-    }
-    else {
-      await client.waitFor(4000);
-      global.continueInstallation = false;
-      await expect(selectedValue.includes(lang), 'Failed to select the "' + lang.toUpperCase() + '" language !').to.be.true;
-    }
+  prestaShopInstall: function (selector, language, country) {
+    scenario('Step 1 : Choosing language', client => {
+      test('should choose "' + language + '" language', () => client.waitAndSelectByValue(selector.StepOne.installation_language_installation_select, language));
+      test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.Common.installation_next_button));
+    }, 'common_client');
+    scenario('Step 2 : Agreeing license agreements', client => {
+      test('should click on "I agree to the above terms and conditions " button', () => client.waitForExistAndClick(selector.StepTwo.installation_agree_terms_and_conditions_checkbox));
+      test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.Common.installation_next_button));
+    }, 'common_client');
+    scenario('Step 3 : Checking system compatibility', client => {
+      test('should check if step 3 is skipped', () => client.isVisible(selector.StepThree.installation_refresh_button));
+      test('should check the test compatibility green box', async () => {
+        if (global.isVisible) {
+          await client.isExisting(selector.StepThree.installation_compatibility_green_box);
+          await client.waitForVisibleAndClick(selector.Common.installation_next_button);
+        } else {
+          await client.pause(0);
+        }
+      });
+    }, 'common_client');
+    scenario('Step 4 : Inserting the shop information', client => {
+      test('should set the "Shop name" input', () => client.waitAndSetValue(InstallPage.StepFour.installation_shop_name_input_field, 'prestashop_demo', 2000));
+      test('should set the "Country" input', () => {
+        return promise
+          .then(() => client.waitForExistAndClick(selector.StepFour.installation_country_list_select))
+          .then(() => client.waitAndSetValue(selector.StepFour.installation_country_search_input_field, country))
+          .then(() => client.waitForExistAndClick(selector.StepFour.installation_country_list_select));
+      });
+      test('should set the "First name" input', () => client.waitAndSetValue(selector.StepFour.installation_account_first_name_input_field, "demo"));
+      test('should set the "Last name" input', () => client.waitAndSetValue(selector.StepFour.installation_account_last_name_input_field, "prestashop"));
+      test('should set the "E-mail address" input', () => client.waitAndSetValue(selector.StepFour.installation_account_email_input_field, global.adminEmail));
+      test('should set the "Shop password" input', () => client.waitAndSetValue(selector.StepFour.installation_account_password_input_field, global.adminPassword));
+      test('should set the "Re-type to confirm" input', () => client.waitAndSetValue(selector.StepFour.installation_re_type_password_input_field, global.adminPassword));
+      test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.Common.installation_next_button));
+    }, 'common_client');
+    scenario('Step 5 : Setting the BD configuration', client => {
+      test('should set the "Database server address" input', () => client.waitAndSetValue(selector.StepFive.installation_database_server_address_input_field, global.db_server));
+      test('should set the "Database name" input', () => client.waitAndSetValue(selector.StepFive.installation_database_name_input_field, 'database' + new Date().getTime(), 0, {}, true));
+      test('should set the "Database login" input', () => client.waitAndSetValue(selector.StepFive.installation_database_login_input_field, db_user, 0, {}, true));
+      test('should set the "Database password" input', () => {
+        if (global.db_empty_password) {
+          return promise
+            .then(() => client.waitAndSetValue(selector.StepFive.installation_database_password_input_field, "", 0, {}, true));
+        } else {
+          return promise
+            .then(() => client.waitAndSetValue(selector.StepFive.installation_database_password_input_field, db_passwd, 0, {}, true));
+        }
+      });
+      test('should click on "Test your database connection now!" button', () => client.waitForExistAndClick(selector.StepFive.installation_test_database_connection_button, 2000));
+      test('should check for the connection and click on "Attempt to create the database automatically" button', () => client.dataBaseCreation(selector.StepFive.installation_database_connection_box));
+      test('should check that the Database is created', () => client.waitForVisible(selector.StepFive.database_created_box));
+      test('should click on "Next" button', () => client.waitForExistAndClick(selector.Common.installation_next_button, 2000));
+    }, 'installation');
+    scenario('Step 6 : Checking installation', client => {
+      test('should create file parameter', () => client.waitForVisible(selector.StepSix.installation_success_create_file_parameters_title, 0, {
+        visible: true,
+        timeout: 360000
+      }));
+      test('should create database', () => client.waitForVisible(selector.StepSix.installation_success_create_database_tables_title, 0, {
+        visible: true,
+        timeout: 360000
+      }));
+      test('should create default shop', () => client.waitForVisible(selector.StepSix.installation_success_create_default_shop_language_title, 0, {
+        visible: true,
+        timeout: 360000
+      }));
+      test('should create database table', () => client.waitForVisible(selector.StepSix.installation_success_populate_database_tables_title, 0, {
+        visible: true,
+        timeout: 360000
+      }));
+      test('should create shop information', () => client.waitForVisible(selector.StepSix.installation_success_configure_shop_information_title, 0, {
+        visible: true,
+        timeout: 360000
+      }));
+      test('should create demonstration data', () => client.waitForVisible(selector.StepSix.installation_success_install_demonstration_data_title, 0, {
+        visible: true,
+        timeout: 360000
+      }));
+      test('should create install module', () => client.waitForVisible(selector.StepSix.installation_success_install_modules_title, 0, {
+        visible: true,
+        timeout: 360000
+      }));
+      test('should create addons modules', () => client.waitForVisible(selector.StepSix.installation_success_install_addons_modules_title, 0, {
+        visible: true,
+        timeout: 360000
+      }));
+      test('should create install theme', () => client.waitForVisible(selector.StepSix.installation_success_install_theme_title, 0, {
+        visible: true,
+        timeout: 360000
+      }));
+      test('should finish installation', () => client.waitForVisible(selector.StepSix.installation_installation_finished_title, 0, {
+        visible: true,
+        timeout: 360000
+      }));
+    }, 'installation');
+    scenario('Step 7 : Checking that installation finished', client => {
+      test('should check that the installation is finished!', () => client.isExisting(selector.Common.installation_success_finished_title));
+    }, 'installation');
   },
-
-  async installStepTwo(client) {
-    if (global.continueInstallation) {
-      await client.waitForAndClick(InstallPage.StepTwo.installation_agree_terms_and_conditions_checkbox);
-      await client.waitForAndClick(InstallPage.Common.installation_next_button);
-    }
-  }
-  ,
-  async installStepThree(client) {
-    if (global.continueInstallation) {
-      await client.checkAttributeValue(InstallPage.StepThree.installation_compatibility_green_box, 'class', 'okBlock', 'equal', 4000);
-      await client.waitForAndClick(InstallPage.Common.installation_next_button, 3000);
-    }
-  }
-  ,
-  async installStepFour(client) {
-    if (global.continueInstallation) {
-      await client.waitForAndType(InstallPage.StepFour.installation_shop_name_input_field, 'puppeteerDemo', 2000);
-      await client.waitForAndClick(InstallPage.StepFour.installation_country_list_select);
-      await client.waitForAndType(InstallPage.StepFour.installation_country_search_input_field, global.country);
-      await client.waitForAndClick(InstallPage.StepFour.installation_country_list_select, 1000);
-      await client.waitForAndType(InstallPage.StepFour.installation_account_first_name_input_field, global.firstName, 3000);
-      await client.waitForAndType(InstallPage.StepFour.installation_account_last_name_input_field, global.lastName, 2000);
-      await client.waitForAndType(InstallPage.StepFour.installation_account_email_input_field, global.email, 2000);
-      await client.waitForAndType(InstallPage.StepFour.installation_account_password_input_field, global.password, 2000);
-      await client.waitForAndType(InstallPage.StepFour.installation_re_type_password_input_field, global.password, 2000);
-      await client.waitForAndClick(InstallPage.Common.installation_next_button);
-    }
-  },
-
-  async installStepFive(client, dbName = '') {
-    if (global.continueInstallation) {
-      await client.waitForAndSetValue(InstallPage.StepFive.installation_database_server_address_input_field, global.dbServer, 3000);
-      await client.waitForAndSetValue(InstallPage.StepFive.installation_database_name_input_field, 'database' + dbName + global.dateTime, 1000);
-      await client.waitForAndSetValue(InstallPage.StepFive.installation_database_login_input_field, global.dbUser, 1000);
-      await client.waitForAndSetValue(InstallPage.StepFive.installation_database_password_input_field, global.dbPassword, 1000);
-      await client.waitForAndClick(InstallPage.StepFive.installation_test_database_connection_button);
-      await client.waitForAndClick(InstallPage.StepFive.installation_database_connection_box, 3000);
-      await client.checkAttributeValue(InstallPage.StepFive.database_created_box, 'class', 'okBlock', 'equal', 5000);
-      await client.waitForAndClick(InstallPage.Common.installation_next_button, 2000);
-    }
-  },
-
-  async installStepSix(client) {
-    if (global.continueInstallation) {
-      await client.waitFor(InstallPage.StepSix.installation_success_create_file_parameters_title, {timeout: 400000});
-      await client.waitFor(InstallPage.StepSix.installation_success_create_database_tables_title, {timeout: 400000});
-      await client.waitFor(InstallPage.StepSix.installation_success_create_default_shop_language_title, {timeout: 400000});
-      await client.waitFor(InstallPage.StepSix.installation_success_populate_database_tables_title, {timeout: 400000});
-      await client.waitFor(InstallPage.StepSix.installation_success_configure_shop_information_title, {timeout: 400000});
-      await client.waitFor(InstallPage.StepSix.installation_success_install_demonstration_data_title, {timeout: 400000});
-      await client.waitFor(InstallPage.StepSix.installation_success_install_modules_title, {timeout: 400000});
-      await client.waitFor(InstallPage.StepSix.installation_success_install_addons_modules_title, {timeout: 400000});
-      await client.waitFor(InstallPage.StepSix.installation_success_install_theme_title, {timeout: 400000});
-      await client.waitFor(InstallPage.StepSix.installation_installation_finished_title, {timeout: 400000});
-    }
-  }
 };

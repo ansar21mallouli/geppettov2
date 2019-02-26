@@ -1,26 +1,23 @@
-const Install = require('../../../../campaigns/clients/common_scenarios/install/install');
+const commonInstallation = require('../../../../campaigns/clients/common_scenarios/install/install');
+const {InstallPage} = require('../../../../uimap/installation/install.js');
+const {HomePage} = require('../../../../uimap/FO/homePage/homePage.js');
 
-scenario('Install the shop', client => {
-  scenario('Open the browser then access to install page', client => {
+scenario('The shop installation', () => {
+  scenario('Open the browser and connect installation interface', client => {
     test('should open the browser', async () => {
       await client.open();
       await client.startTracing('installShop');
     });
-    test('should go to the install page', async () => {
-      await client.openShopURL(global.installFolderName);
-      await client.waitFor(5000);
 
-    });
-    Install.installShop(global.language, ['en']);
-    scenario('Sign in the "Front Office"', client => {
-      test('should sign in the Front Office', async () => {
-        await client.openShopURL();
-        await client.signInFO();
-      });
-    }, 'common_client');
+    test('should go to install page ', () => client.localhost(URL));
   }, 'common_client');
 
-}, 'common_client', true);
+  commonInstallation.prestaShopInstall(InstallPage, language, country);
+
+  scenario('Login to the Front Office', client => {
+    test('should sign in FO', () => client.signInFO(HomePage));
+  }, 'installation');
+}, 'common_client', false);
 
 
 

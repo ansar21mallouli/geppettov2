@@ -1,21 +1,26 @@
 'use strict';
 let argv = require('minimist')(process.argv.slice(2));
+let siteUrl = argv.URL || 'http://localhost';
+if (!/^https?:\/\//i.test(siteUrl)) {
+  siteUrl = 'http://' + siteUrl;
+}
 
 global.dateTime = new Date().getTime();
 global.firstName = 'Demo';
 global.lastName = 'Prestashop';
-global.email = argv.LOGIN || 'demo@prestashop.com';
-global.password = argv.PASSWD || 'prestashop_demo';
+global.adminEmail = argv.LOGIN || 'demo@prestashop.com';
+global.adminPassword = argv.PASSWD || 'prestashop_demo';
 
 global.rcTarget = argv.RC_TARGET || '';
 global.rcLink = argv.UrlStableVersion || 'https://download.prestashop.com/download/releases/prestashop_1.7.4.2.zip';
 global.prestashopFolderName = 'prestashop';
-global.URL = argv.URL || 'http://127.0.0.1:8081/prestashop';
+global.URL = siteUrl;
 global.language = argv.LANG || 'en';
 global.country = argv.COUNTRY || 'france';
-global.dbServer = argv.DB_SERVER || '10.1.37.2';
-global.dbUser = argv.DB_USER || 'root';
-global.dbPassword = argv.DB_PASSWD || 'sifast2016';
+global.db_server = argv.DB_SERVER || '10.1.37.2';
+global.db_user = argv.DB_USER || 'root';
+global.db_passwd = argv.DB_PASSWD || 'sifast2016';
+global.db_empty_password = !!argv.DB_EMPTY_PASSWD; //Cast as boolean
 
 global.downloadFileFolder = './test/campaigns/files/generated_files/downloads/';
 global.customerEmail = 'pub@prestashop.com';

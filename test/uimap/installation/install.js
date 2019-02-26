@@ -1,7 +1,8 @@
 module.exports = {
   InstallPage: {
     Common: {
-      installation_next_button: '#btNext'
+      installation_next_button: '#btNext',
+      installation_success_finished_title: '#install_process_success h2'
     },
     StepOne: {
       installation_language_installation_select: '#langList'
@@ -10,7 +11,8 @@ module.exports = {
       installation_agree_terms_and_conditions_checkbox: '#set_license'
     },
     StepThree: {
-      installation_compatibility_green_box: '#sheet_system > h3.okBlock , #sheet_ > h3.okBlock'
+      installation_compatibility_green_box: '#sheet_system > h3.okBlock , #sheet_ > h3.okBlock',
+      installation_refresh_button: '#req_bt_refresh'
     },
     StepFour: {
       installation_shop_name_input_field: '#infosShop',
